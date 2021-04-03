@@ -1,0 +1,11 @@
+pseudocode
+
+Win = player robots has defeated all enemy robots
+Lose = players robot's health is zero or less
+
+Game States
+Win -> player robot has defeated all enemy robots
+	fight all enemy robots
+	defeat each enemy robots
+	
+Lose -> Player's robot health is zero or less
