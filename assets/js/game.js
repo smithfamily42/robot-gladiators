@@ -25,13 +25,16 @@ var fight = function(enemyName) {
       if (confirmSkip) {
         window.alert(playerName + " has decided to skip this fight. Goodbye!");
         // subtract money from playerMoney for skipping
-        playerMoney = playerMoney - 10;
+        playerMoney = Math.max(0, playerMoney - 10);
         console.log("playerMoney", playerMoney);
         break;
       }
     }
     // remove enemy's health by subtracting the amount set in the playerAttack variable
-    enemyHealth = enemyHealth - playerAttack;
+    // generate random damage value based on player's attack power
+var damage = randomNumber(playerAttack - 3, playerAttack);
+
+enemyHealth = Math.max(0, enemyHealth - damage);
     console.log(
       playerName + ' attacked ' + enemyName + '. ' + enemyName + ' now has ' + enemyHealth + ' health remaining.'
     );
@@ -47,7 +50,9 @@ var fight = function(enemyName) {
     }
 
     // remove players's health by subtracting the amount set in the enemyAttack variable
-    playerHealth = playerHealth - enemyAttack;
+    var damage = randomNumber(enemyAttack - 3, enemyAttack);
+
+    playerHealth = Math.max(0, playerHealth - damage);  
     console.log(
       enemyName + " attacked " + playerName + ". " + playerName + " now has " + playerHealth + " health remaining."
     );
@@ -61,39 +66,46 @@ var fight = function(enemyName) {
         }
       }
     };
+// function to generate a random numeric value
+var randomNumber = function(min, max) {
+  var value = Math.floor(Math.random() * (max - min +1) + min);
+
+  return value;
+};
 
 var startGame = function() {  
   // reset player stats
   playerHealth = 100;
   playerAttack = 10;
   playerMoney = 10;  
+  enemyHealth = randomNumber(40, 60);
+
   for(var i = 0; i < enemyNames.length; i++) {
     if (playerHealth > 0) {
     // let player know what round they are in, remember that arrays start at 0 so it needs to have 1 added to it
     window.alert('Welcome to Robot Gladiators! Round ' + (i + 1));
     var pickedEnemyName = enemyNames[i];
+
     enemyHealth = 50;
+
   fight(pickedEnemyName);
 
   // if we're not at the last enemy in the array
 if (playerHealth > 0 && i < enemyNames.length - 1) {
+
   var storeConfirm = window.confirm("The fight is over, visit the store before the next round?");
   if (storeConfirm) {
     shop();
+    }
   }
 }
-//to play again
-startGame();
-//after the lopp ends player is out of health or enemies
-endGame();
-  } else {
+else {
   window.alert('You have lost your robot in battle! Game Over!');
   break;
     }
   }
+endGame();
 };
-
-
 
 // function to end the entire game
 var endGame = function() {
@@ -110,11 +122,11 @@ var playAgainConfirm = window.confirm("Would you like to play again?");
 if (playAgainConfirm) {
   // restart the game
   startGame();
-} 
-else {
+} else {
   window.alert("Thank you for playing Robot Gladiators! Come back soon!");
 }
 };
+// shop between battles
 var shop = function() {
   // ask player what they'd like to do
   var shopOptionPrompt = window.prompt(
@@ -124,6 +136,7 @@ var shop = function() {
 switch (shopOptionPrompt) {
   case "refill":
     case "REFILL":
+      if (playerMoney >= 7) {
     window.alert("Refilling player's health by 20 for 7 dollars.");
 
     // increase health and decrease money
@@ -135,6 +148,7 @@ switch (shopOptionPrompt) {
     break;
   case "upgrade":
     case "UPGRADE":
+      if (playerMoney >= 7) {
     window.alert("Upgrading player's attack by 6 for 7 dollars.");
 
     // increase attack and decrease money
